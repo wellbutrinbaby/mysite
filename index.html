@@ -24,7 +24,6 @@
       min-height: 100vh;
     }
 
-    /* HERO */
     .hero {
       position: relative;
       width: 100%;
@@ -41,7 +40,6 @@
       background: linear-gradient(135deg, #2d5a3d 0%, #4a7c59 30%, #7a9e7e 60%, #c4a882 100%);
     }
 
-    /* decorative circles */
     .hero-bg::before {
       content: '';
       position: absolute;
@@ -90,7 +88,6 @@
       color: #ffffff;
       line-height: 1.1;
       text-shadow: 0 2px 20px rgba(0,0,0,0.4);
-      /* letter backdrop */
       background: rgba(0,0,0,0.18);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
@@ -99,7 +96,6 @@
       display: inline-block;
     }
 
-    /* MAIN CONTENT */
     .main {
       max-width: 680px;
       margin: 0 auto;
@@ -118,7 +114,30 @@
       border-bottom: 2px solid var(--border);
     }
 
-    /* UPLOAD */
+    /* API KEY SECTION */
+    .api-section {
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 40px;
+    }
+    .api-section h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .api-section p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .api-section a { color: var(--terracotta); }
+    .api-section .question-input { margin-bottom: 10px; }
+    .api-section .question-input:last-of-type { margin-bottom: 0; }
+
     .upload-area {
       border: 2px dashed var(--sage);
       border-radius: 16px;
@@ -140,10 +159,7 @@
       border-radius: 12px; display: none; margin-top: 16px;
     }
 
-    /* QUESTIONS */
-    .question-block {
-      margin-bottom: 36px;
-    }
+    .question-block { margin-bottom: 36px; }
 
     .question-label {
       font-family: 'Playfair Display', serif;
@@ -180,6 +196,7 @@
       transition: border-color 0.2s, box-shadow 0.2s;
       outline: none;
       resize: none;
+      display: block;
     }
     .question-input:focus {
       border-color: var(--sage);
@@ -187,7 +204,6 @@
     }
     .question-input::placeholder { color: #bbb; }
 
-    /* GENERATE BUTTON */
     .generate-btn {
       width: 100%;
       padding: 18px;
@@ -207,7 +223,6 @@
     .generate-btn:active { transform: translateY(0); }
     .generate-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
 
-    /* STATUS */
     .status {
       text-align: center;
       margin-top: 24px;
@@ -217,12 +232,10 @@
     }
     .status.error { color: #c0392b; }
 
-    /* RESULT */
     .result-section {
       margin-top: 48px;
       display: none;
     }
-
     .result-section.visible { display: block; }
 
     .result-label {
@@ -260,29 +273,12 @@
     }
     .download-btn:hover { background: #6a8e6e; transform: translateY(-1px); }
 
-    /* API KEY */
-    .api-section {
-      background: white;
-      border: 1.5px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 40px;
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 48px 0;
     }
-    .api-section h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 17px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .api-section p {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      line-height: 1.5;
-    }
-    .api-section a { color: var(--terracotta); }
 
-    /* LOADING SPINNER */
     .spinner {
       display: inline-block;
       width: 18px; height: 18px;
@@ -295,13 +291,6 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* DIVIDER */
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 48px 0;
-    }
-
     @media (max-width: 600px) {
       .hero { height: 380px; }
     }
@@ -309,7 +298,6 @@
 </head>
 <body>
 
-  <!-- HERO -->
   <div class="hero">
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
@@ -319,7 +307,6 @@
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="main">
 
     <p class="section-headline">Summer is here, time to pick your dream picnic spread in San Francisco.</p>
@@ -328,8 +315,8 @@
     <div class="api-section">
       <h3>🔑 Your API Keys</h3>
       <p>Enter your keys below — they stay in your browser and are never stored or sent anywhere except directly to the APIs. Get your Anthropic key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> and your OpenAI key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a>.</p>
-      <input class="question-input" type="password" id="anthropicKey" placeholder="Anthropic API key (sk-ant-...)" style="margin-bottom:10px"/>
-      <input class="question-input" type="password" id="openaiKey" placeholder="OpenAI API key (sk-...)"/>
+      <input class="question-input" type="password" id="anthropicKey" placeholder="Anthropic API key (sk-ant-…)" style="margin-bottom:10px"/>
+      <input class="question-input" type="password" id="openaiKey" placeholder="OpenAI API key (sk-…)"/>
     </div>
 
     <!-- PHOTO UPLOAD -->
@@ -349,7 +336,6 @@
 
     <div class="divider"></div>
 
-    <!-- QUESTIONS -->
     <div class="question-block">
       <label class="question-label" for="q1">
         <span class="question-num">1</span>
@@ -377,19 +363,17 @@
     <div class="question-block">
       <label class="question-label" for="q4">
         <span class="question-num">4</span>
-        What kind of pet did you bring to the park?
+        What kind of pet did you bring to the park with you?
       </label>
       <input class="question-input" type="text" id="q4" placeholder="e.g. a golden retriever, a tabby cat, no pet…"/>
     </div>
 
-    <!-- GENERATE -->
     <button class="generate-btn" id="generateBtn" onclick="generate()">
       ✨ Generate my picnic scene
     </button>
 
     <div class="status" id="status"></div>
 
-    <!-- RESULT -->
     <div class="result-section" id="resultSection">
       <p class="result-label">Your Dream SF Picnic 🌁</p>
       <img class="result-img" id="resultImg" alt="Your AI picnic scene"/>
@@ -399,7 +383,6 @@
   </div>
 
   <script>
-    // Preview uploaded photo
     document.getElementById('photoInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -431,16 +414,16 @@
 
     async function generate() {
       const anthropicKey = document.getElementById('anthropicKey').value.trim();
-      const openaiKey = document.getElementById('openaiKey').value.trim();
-      const photoFile = document.getElementById('photoInput').files[0];
+      const openaiKey    = document.getElementById('openaiKey').value.trim();
+      const photoFile    = document.getElementById('photoInput').files[0];
       const q1 = document.getElementById('q1').value.trim();
       const q2 = document.getElementById('q2').value.trim();
       const q3 = document.getElementById('q3').value.trim();
       const q4 = document.getElementById('q4').value.trim();
 
       if (!anthropicKey) return setStatus('Please enter your Anthropic API key.', true);
-      if (!openaiKey) return setStatus('Please enter your OpenAI API key.', true);
-      if (!photoFile) return setStatus('Please upload a photo of yourself.', true);
+      if (!openaiKey)    return setStatus('Please enter your OpenAI API key.', true);
+      if (!photoFile)    return setStatus('Please upload a photo of yourself.', true);
       if (!q1 || !q2 || !q3 || !q4) return setStatus('Please answer all four questions.', true);
 
       const btn = document.getElementById('generateBtn');
@@ -449,7 +432,6 @@
       setStatus('Step 1 of 2 — Claude is reading your photo and crafting the perfect scene…');
 
       try {
-        // Step 1: Claude analyzes photo + answers and writes a DALL-E prompt
         const imageBase64 = await toBase64(photoFile);
         const mediaType = photoFile.type || 'image/jpeg';
 
@@ -503,7 +485,6 @@ Return ONLY the image prompt, nothing else. No preamble, no explanation. Just th
         btn.innerHTML = '<span class="spinner"></span>Painting your picnic scene…';
         setStatus('Step 2 of 2 — DALL-E is painting your dream picnic…');
 
-        // Step 2: DALL-E generates the image
         const dalleRes = await fetch('https://api.openai.com/v1/images/generations', {
           method: 'POST',
           headers: {
@@ -528,7 +509,6 @@ Return ONLY the image prompt, nothing else. No preamble, no explanation. Just th
         const dalleData = await dalleRes.json();
         const imageUrl = dalleData.data[0].url;
 
-        // Show result
         const resultImg = document.getElementById('resultImg');
         resultImg.src = imageUrl;
         resultImg.onload = () => {
@@ -547,8 +527,6 @@ Return ONLY the image prompt, nothing else. No preamble, no explanation. Just th
         btn.disabled = false;
       }
     }
-    const ANTHROPIC_KEY = "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";
-const OPENAI_KEY    = "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";
   </script>
 </body>
 </html>
