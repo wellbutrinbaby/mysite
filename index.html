@@ -114,7 +114,6 @@
       border-bottom: 2px solid var(--border);
     }
 
-    /* API KEY SECTION */
     .api-section {
       background: white;
       border: 1.5px solid var(--border);
@@ -135,8 +134,6 @@
       line-height: 1.5;
     }
     .api-section a { color: var(--terracotta); }
-    .api-section .question-input { margin-bottom: 10px; }
-    .api-section .question-input:last-of-type { margin-bottom: 0; }
 
     .upload-area {
       border: 2px dashed var(--sage);
@@ -232,10 +229,7 @@
     }
     .status.error { color: #c0392b; }
 
-    .result-section {
-      margin-top: 48px;
-      display: none;
-    }
+    .result-section { margin-top: 48px; display: none; }
     .result-section.visible { display: block; }
 
     .result-label {
@@ -273,11 +267,7 @@
     }
     .download-btn:hover { background: #6a8e6e; transform: translateY(-1px); }
 
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 48px 0;
-    }
+    .divider { height: 1px; background: var(--border); margin: 48px 0; }
 
     .spinner {
       display: inline-block;
@@ -291,9 +281,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    @media (max-width: 600px) {
-      .hero { height: 380px; }
-    }
+    @media (max-width: 600px) { .hero { height: 380px; } }
   </style>
 </head>
 <body>
@@ -314,7 +302,7 @@
     <!-- API KEYS -->
     <div class="api-section">
       <h3>🔑 Your API Keys</h3>
-      <p>Enter your keys below — they stay in your browser and are never stored or sent anywhere except directly to the APIs. Get your Anthropic key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> and your OpenAI key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a>.</p>
+      <p>Enter your keys below — they stay in your browser and are never stored. Get your Anthropic key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> and your OpenAI key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a>.</p>
       <input class="question-input" type="password" id="anthropicKey" placeholder="Anthropic API key (sk-ant-…)" style="margin-bottom:10px"/>
       <input class="question-input" type="password" id="openaiKey" placeholder="OpenAI API key (sk-…)"/>
     </div>
@@ -325,11 +313,11 @@
         <span class="question-num">📷</span>
         Upload a photo of yourself
       </div>
-      <div class="upload-area" id="uploadArea">
+      <div class="upload-area">
         <input type="file" id="photoInput" accept="image/*"/>
-        <div class="upload-icon">🌿</div>
-        <p><strong>Click to upload</strong> or drag & drop</p>
-        <p style="font-size:13px; margin-top:4px;">JPG, PNG or WEBP</p>
+        <div class="upload-icon" id="uploadIcon">🌿</div>
+        <p id="uploadText1"><strong>Click to upload</strong> or drag & drop</p>
+        <p id="uploadText2" style="font-size:13px; margin-top:4px;">JPG, PNG or WEBP</p>
         <img class="preview-img" id="previewImg" alt="Your photo"/>
       </div>
     </div>
@@ -391,8 +379,9 @@
         const img = document.getElementById('previewImg');
         img.src = ev.target.result;
         img.style.display = 'block';
-        document.querySelector('.upload-area .upload-icon').style.display = 'none';
-        document.querySelectorAll('.upload-area p').forEach(p => p.style.display = 'none');
+        document.getElementById('uploadIcon').style.display = 'none';
+        document.getElementById('uploadText1').style.display = 'none';
+        document.getElementById('uploadText2').style.display = 'none';
       };
       reader.readAsDataURL(file);
     });
@@ -435,85 +424,22 @@
         const imageBase64 = await toBase64(photoFile);
         const mediaType = photoFile.type || 'image/jpeg';
 
-        const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
+        const res = await fetch('/api/generate', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': anthropicKey,
-            'anthropic-version': '2023-06-01',
-            'anthropic-dangerous-direct-browser-access': 'true'
-          },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-5',
-            max_tokens: 1000,
-            messages: [{
-              role: 'user',
-              content: [
-                {
-                  type: 'image',
-                  source: { type: 'base64', media_type: mediaType, data: imageBase64 }
-                },
-                {
-                  type: 'text',
-                  text: `You are a creative AI image prompt writer. The person in this photo wants a beautiful, painterly illustration of themselves at a San Francisco picnic.
-
-Here are their picnic details:
-- Dream SF food: ${q1}
-- Dream SF park: ${q2}
-- Blanket: ${q3}
-- Pet at the park: ${q4}
-
-Describe the person's appearance from the photo (hair color, skin tone, rough age, notable features, clothing style if visible) and write a vivid, detailed DALL-E image generation prompt for a beautiful illustrated scene of this specific person enjoying their dream SF picnic with all the details above.
-
-The style should be warm, sun-drenched editorial illustration — like a magazine cover for a San Francisco lifestyle magazine. Include the Golden Gate Bridge or iconic SF skyline subtly in the background. Make it feel golden hour, magical, and summery.
-
-Return ONLY the image prompt, nothing else. No preamble, no explanation. Just the prompt.`
-                }
-              ]
-            }]
-          })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ anthropicKey, openaiKey, imageBase64, mediaType, q1, q2, q3, q4 })
         });
 
-        if (!claudeRes.ok) {
-          const err = await claudeRes.json();
-          throw new Error(err.error?.message || 'Claude API error');
-        }
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Something went wrong');
 
-        const claudeData = await claudeRes.json();
-        const imagePrompt = claudeData.content[0].text.trim();
-
-        btn.innerHTML = '<span class="spinner"></span>Painting your picnic scene…';
-        setStatus('Step 2 of 2 — DALL-E is painting your dream picnic…');
-
-        const dalleRes = await fetch('https://api.openai.com/v1/images/generations', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${openaiKey}`
-          },
-          body: JSON.stringify({
-            model: 'dall-e-3',
-            prompt: imagePrompt,
-            n: 1,
-            size: '1024x1024',
-            quality: 'standard',
-            response_format: 'url'
-          })
-        });
-
-        if (!dalleRes.ok) {
-          const err = await dalleRes.json();
-          throw new Error(err.error?.message || 'OpenAI API error');
-        }
-
-        const dalleData = await dalleRes.json();
-        const imageUrl = dalleData.data[0].url;
+        setStatus('Step 2 of 2 — Painting your dream picnic…');
 
         const resultImg = document.getElementById('resultImg');
-        resultImg.src = imageUrl;
+        resultImg.src = data.imageUrl;
         resultImg.onload = () => {
           document.getElementById('resultSection').classList.add('visible');
-          document.getElementById('downloadBtn').href = imageUrl;
+          document.getElementById('downloadBtn').href = data.imageUrl;
           document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
